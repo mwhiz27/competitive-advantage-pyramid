@@ -1,0 +1,334 @@
+{
+  "company": {
+    "name": "SAMPLE CO",
+    "ticker": "SAMPLE: SMPL",
+    "track": "large-public",
+    "analysisDate": "SAMPLE: 2026-09-25"
+  },
+  "method": {
+    "summary": "SAMPLE: This analysis compares what SAMPLE CO says about its competitive advantage (stated pyramid, drawn from investor-facing narrative documents) against what its resource-allocation and incentive decisions show (revealed pyramid, drawn from compensation disclosure, cash-flow statements, and segment reporting). Each element on both pyramids is tied to at least one citation with document, section, and page.",
+    "inclusionRules": [
+      "SAMPLE: Stated-pyramid elements must come from a document the company authored for external audiences (10-K Item 1, annual letter, investor day deck).",
+      "SAMPLE: Revealed-pyramid elements must be supported by a decision with a dollar figure, a governance vote, or a measurable operational change — not by management commentary.",
+      "SAMPLE: A claim repeated in only one document is excluded unless it is quantified.",
+      "SAMPLE: Where stated and revealed evidence conflict, both are kept and the conflict is logged as a gap rather than resolved in favor of either."
+    ],
+    "timeWindow": "SAMPLE: Fiscal years 2023-2025, plus the 2026 proxy statement filed after FY2025 year-end.",
+    "limitations": [
+      "SAMPLE: Only public filings were used; no interviews or internal documents were available.",
+      "SAMPLE: Segment-level R&D is not separately disclosed, so reinvestment intensity is estimated at the consolidated level.",
+      "SAMPLE: Three years is too short to separate a deliberate strategic shift from a single-cycle response to interest rates."
+    ]
+  },
+  "elements": [
+    {
+      "id": "S-B1",
+      "pyramid": "stated",
+      "layer": "base",
+      "claim": "SAMPLE: Long-term customer trust before short-term margin",
+      "detail": "SAMPLE: The shareholder letter positions customer trust as the value that overrides quarterly margin pressure, and repeats it as the first of four stated operating principles.",
+      "rcType": null,
+      "evidence": [
+        {
+          "document": "SAMPLE: 2025 Annual Report",
+          "section": "SAMPLE: Letter to Shareholders",
+          "page": "3",
+          "excerpt": "SAMPLE: We will accept lower near-term margin where the alternative is spending down the trust our customers have placed in us.",
+          "url": "https://example.com/sample-annual-report-2025",
+          "accessed": "2026-09-14"
+        },
+        {
+          "document": "SAMPLE: FY2025 Form 10-K",
+          "section": "SAMPLE: Item 1 – Business, Our Operating Principles",
+          "page": "6",
+          "excerpt": "SAMPLE: Principle one: earn customer trust over the long term.",
+          "url": "",
+          "accessed": "2026-09-14"
+        }
+      ],
+      "metric": ""
+    },
+    {
+      "id": "S-B2",
+      "pyramid": "stated",
+      "layer": "base",
+      "claim": "SAMPLE: Innovation-first culture as the core priority",
+      "detail": "SAMPLE: Management describes an innovation-first culture as the source of durable advantage, and frames reinvestment as the expression of that priority.",
+      "rcType": null,
+      "evidence": [
+        {
+          "document": "SAMPLE: 2025 Investor Day Deck",
+          "section": "SAMPLE: Slide 4 – How We Win",
+          "page": "4",
+          "excerpt": "SAMPLE: Our advantage is cultural before it is technical: we fund the next platform before the market asks for it.",
+          "url": "",
+          "accessed": "2026-09-14"
+        }
+      ],
+      "metric": ""
+    },
+    {
+      "id": "S-M1",
+      "pyramid": "stated",
+      "layer": "middle",
+      "claim": "SAMPLE: Proprietary 40M-record customer data asset",
+      "detail": "SAMPLE: The company presents its accumulated first-party data set as a hard-to-replicate asset that improves personalization and underwrites pricing decisions.",
+      "rcType": "resource",
+      "evidence": [
+        {
+          "document": "SAMPLE: FY2025 Form 10-K",
+          "section": "SAMPLE: Item 1 – Business, Technology and Data",
+          "page": "11",
+          "excerpt": "SAMPLE: Our data set of approximately 40 million customer records cannot be reconstructed by a new entrant.",
+          "url": "",
+          "accessed": "2026-09-14"
+        }
+      ],
+      "metric": "SAMPLE: ~40M first-party records as of FY2025 year-end"
+    },
+    {
+      "id": "S-M2",
+      "pyramid": "stated",
+      "layer": "middle",
+      "claim": "SAMPLE: Rapid product experimentation capability",
+      "detail": "SAMPLE: Management claims a repeatable capability to test and ship product changes faster than competitors, citing an internal release cadence figure.",
+      "rcType": "capability",
+      "evidence": [
+        {
+          "document": "SAMPLE: 2025 Investor Day Deck",
+          "section": "SAMPLE: Slide 12 – Product Velocity",
+          "page": "12",
+          "excerpt": "SAMPLE: We run more than 900 live experiments per quarter and ship weekly.",
+          "url": "",
+          "accessed": "2026-09-14"
+        }
+      ],
+      "metric": "SAMPLE: 900+ experiments/quarter claimed, FY2025"
+    },
+    {
+      "id": "S-T1",
+      "pyramid": "stated",
+      "layer": "top",
+      "claim": "SAMPLE: Sustained R&D investment in the next-gen platform",
+      "detail": "SAMPLE: The stated activity that carries the innovation priority is continued funding of a multi-year platform rebuild, described as the company's largest capital commitment.",
+      "rcType": null,
+      "evidence": [
+        {
+          "document": "SAMPLE: 2025 Annual Report",
+          "section": "SAMPLE: MD&A – Capital Allocation Priorities",
+          "page": "28",
+          "excerpt": "SAMPLE: Platform reinvestment remains our first call on capital.",
+          "url": "",
+          "accessed": "2026-09-14"
+        }
+      ],
+      "metric": ""
+    },
+    {
+      "id": "S-T2",
+      "pyramid": "stated",
+      "layer": "top",
+      "claim": "SAMPLE: In-house, direct-to-customer service model",
+      "detail": "SAMPLE: The company states that customer service is delivered by its own employees because service contact is where trust is earned or lost.",
+      "rcType": null,
+      "evidence": [
+        {
+          "document": "SAMPLE: FY2025 Form 10-K",
+          "section": "SAMPLE: Item 1 – Business, Customer Operations",
+          "page": "9",
+          "excerpt": "SAMPLE: We staff customer support internally rather than through third parties.",
+          "url": "",
+          "accessed": "2026-09-14"
+        }
+      ],
+      "metric": ""
+    },
+    {
+      "id": "R-B1",
+      "pyramid": "revealed",
+      "layer": "base",
+      "claim": "SAMPLE: Capital return ranks above reinvestment",
+      "detail": "SAMPLE: Three years of cash deployment and the incentive plan's metric weighting both place returned capital ahead of reinvestment, which is the priority the decisions reveal.",
+      "rcType": null,
+      "evidence": [
+        {
+          "document": "SAMPLE: 2026 DEF 14A",
+          "section": "SAMPLE: CD&A – Annual Incentive Plan Metrics",
+          "page": "47",
+          "excerpt": "SAMPLE: Adjusted EPS carries a 60% weighting; no innovation or reinvestment metric is included in the annual plan.",
+          "url": "https://example.com/sample-def-14a-2026",
+          "accessed": "2026-09-16"
+        },
+        {
+          "document": "SAMPLE: FY2025 Form 10-K",
+          "section": "SAMPLE: Consolidated Statements of Cash Flows",
+          "page": "F-7",
+          "excerpt": "SAMPLE: Repurchases of common stock of $2,400 million versus research and development of $610 million.",
+          "url": "",
+          "accessed": "2026-09-16"
+        }
+      ],
+      "metric": "SAMPLE: Buybacks $2.4B vs R&D $0.61B, FY2023-25 cumulative 3.9x"
+    },
+    {
+      "id": "R-B2",
+      "pyramid": "revealed",
+      "layer": "base",
+      "claim": "SAMPLE: Unit-cost discipline is the dominant operating value",
+      "detail": "SAMPLE: Cost per order is the only operating metric tied to bonus payout at every management level, and the restructuring charge shows the company acting on it.",
+      "rcType": null,
+      "evidence": [
+        {
+          "document": "SAMPLE: 2026 DEF 14A",
+          "section": "SAMPLE: CD&A – Cascaded Scorecards",
+          "page": "52",
+          "excerpt": "SAMPLE: Cost per order appears on every management scorecard below the executive level.",
+          "url": "",
+          "accessed": "2026-09-16"
+        },
+        {
+          "document": "SAMPLE: FY2025 Form 10-K",
+          "section": "SAMPLE: Note 14 – Restructuring",
+          "page": "F-31",
+          "excerpt": "SAMPLE: Charges of $180 million, substantially all related to service and fulfillment headcount.",
+          "url": "",
+          "accessed": "2026-09-16"
+        }
+      ],
+      "metric": "SAMPLE: $180M restructuring charge, FY2025"
+    },
+    {
+      "id": "R-M1",
+      "pyramid": "revealed",
+      "layer": "middle",
+      "claim": "SAMPLE: Owned low-cost depot and distribution network",
+      "detail": "SAMPLE: The asset the company actually funded over the window is physical distribution, not the data platform; depot count and capex disclosure both point to it.",
+      "rcType": "resource",
+      "evidence": [
+        {
+          "document": "SAMPLE: FY2025 Form 10-K",
+          "section": "SAMPLE: Item 2 – Properties",
+          "page": "19",
+          "excerpt": "SAMPLE: We operated 64 owned depots at year-end, up from 41 three years earlier.",
+          "url": "",
+          "accessed": "2026-09-16"
+        },
+        {
+          "document": "SAMPLE: FY2025 Form 10-K",
+          "section": "SAMPLE: MD&A – Capital Expenditures",
+          "page": "31",
+          "excerpt": "SAMPLE: Distribution assets represented 71% of FY2025 capital expenditures.",
+          "url": "",
+          "accessed": "2026-09-16"
+        }
+      ],
+      "metric": "SAMPLE: 64 depots (from 41); 71% of FY2025 capex"
+    },
+    {
+      "id": "R-M2",
+      "pyramid": "revealed",
+      "layer": "middle",
+      "claim": "SAMPLE: Procurement and vendor-renegotiation capability",
+      "detail": "SAMPLE: The repeatable skill the company demonstrates and rewards is extracting supplier concessions, evidenced by disclosed payable-days extension and a dedicated incentive metric.",
+      "rcType": "capability",
+      "evidence": [
+        {
+          "document": "SAMPLE: 2026 DEF 14A",
+          "section": "SAMPLE: CD&A – Individual Objectives, COO",
+          "page": "55",
+          "excerpt": "SAMPLE: Supplier cost recovery of $95 million was achieved against a $70 million objective.",
+          "url": "",
+          "accessed": "2026-09-16"
+        },
+        {
+          "document": "SAMPLE: FY2025 Form 10-K",
+          "section": "SAMPLE: MD&A – Working Capital",
+          "page": "33",
+          "excerpt": "SAMPLE: Days payable outstanding increased to 78 days from 54 days in FY2023.",
+          "url": "",
+          "accessed": "2026-09-16"
+        }
+      ],
+      "metric": "SAMPLE: DPO 54 to 78 days; $95M supplier cost recovery vs $70M target"
+    },
+    {
+      "id": "R-T1",
+      "pyramid": "revealed",
+      "layer": "top",
+      "claim": "SAMPLE: Expanded buyback and initiated dividend",
+      "detail": "SAMPLE: The largest discretionary activity of the window was returning capital: the repurchase authorization was raised and a first dividend was declared in the same year as the restructuring.",
+      "rcType": null,
+      "evidence": [
+        {
+          "document": "SAMPLE: FY2025 Form 10-K",
+          "section": "SAMPLE: Note 11 – Shareholders' Equity",
+          "page": "F-26",
+          "excerpt": "SAMPLE: The Board increased the repurchase authorization to $3,000 million and declared the company's first quarterly dividend.",
+          "url": "",
+          "accessed": "2026-09-16"
+        }
+      ],
+      "metric": "SAMPLE: Authorization raised to $3.0B; first dividend declared FY2025"
+    },
+    {
+      "id": "R-T2",
+      "pyramid": "revealed",
+      "layer": "top",
+      "claim": "SAMPLE: Outsourced tier-1 customer service offshore",
+      "detail": "SAMPLE: Despite the stated in-house service model, the company moved the majority of first-contact support to a third-party vendor during FY2025.",
+      "rcType": null,
+      "evidence": [
+        {
+          "document": "SAMPLE: FY2025 Form 10-K",
+          "section": "SAMPLE: MD&A – Operating Expenses",
+          "page": "30",
+          "excerpt": "SAMPLE: Approximately 60% of first-contact support volume transitioned to an outsourced provider during the year.",
+          "url": "",
+          "accessed": "2026-09-16"
+        },
+        {
+          "document": "SAMPLE: FY2025 Q3 Earnings Call Transcript",
+          "section": "SAMPLE: Prepared Remarks – CFO",
+          "page": "4",
+          "excerpt": "SAMPLE: The support transition contributes roughly 40 basis points of margin in FY2026.",
+          "url": "",
+          "accessed": "2026-09-16"
+        }
+      ],
+      "metric": "SAMPLE: ~60% of tier-1 contacts outsourced, FY2025"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "G1",
+      "title": "SAMPLE: Innovation-first narrative, capital-return incentives",
+      "statedIds": ["S-B2", "S-T1"],
+      "revealedIds": ["R-B1", "R-T1"],
+      "whatDiffers": "SAMPLE: The stated pyramid makes reinvestment the first call on capital, while the revealed pyramid shows $2.4B returned against $0.61B of R&D and an annual bonus plan with no reinvestment metric at all.",
+      "strategicMeaning": "SAMPLE: The advantage the company is actually managing for is cash-return reliability, not product leadership. If the platform rebuild is genuinely the source of future advantage, no one at the company is paid to deliver it, so the stated priority is unlikely to survive a year of margin pressure.",
+      "classification": "misalignment",
+      "classificationReasoning": "SAMPLE: Classified as misalignment rather than positioning because the divergence appears inside the incentive system, which is not an audience-facing document. Management would have had to choose an EPS-weighted plan whether or not it talked about innovation externally."
+    },
+    {
+      "id": "G2",
+      "title": "SAMPLE: In-house service claim, outsourced service reality",
+      "statedIds": ["S-B1", "S-T2"],
+      "revealedIds": ["R-T2"],
+      "whatDiffers": "SAMPLE: The 10-K business description states that support is staffed internally rather than through third parties; the MD&A twenty-one pages later discloses that about 60% of first-contact volume moved to an outsourced provider in the same fiscal year.",
+      "strategicMeaning": "SAMPLE: Trust is stated as the base value but is being traded for roughly 40 basis points of margin at the exact point of customer contact. The stated advantage and the revealed advantage are drawing on the same operating budget, and cost is winning.",
+      "classification": "unclear",
+      "classificationReasoning": "SAMPLE: Left unclear because the disclosures may not be contradictory in the company's own reading: the retained 40% of volume may be the segment it considers trust-critical. Resolving this needs the service-tiering detail, which is not public."
+    },
+    {
+      "id": "G3",
+      "title": "SAMPLE: Data asset claimed, distribution asset funded",
+      "statedIds": ["S-M1"],
+      "revealedIds": ["R-M1", "R-M2"],
+      "whatDiffers": "SAMPLE: The stated middle layer names a proprietary data resource as the hard-to-copy asset, but 71% of capital expenditure went to depots and the only rewarded capability is supplier renegotiation.",
+      "strategicMeaning": "SAMPLE: The real resource base is physical and the real capability is procurement — an advantage that is defensible but scale-dependent and imitable by any competitor of similar size. The data asset is an unfunded claim, so it should be treated as a stated aspiration rather than a current source of advantage.",
+      "classification": "deliberate positioning",
+      "classificationReasoning": "SAMPLE: Read as deliberate positioning because a data narrative attracts a higher multiple than a distribution narrative, and the company is transparent about the capex mix in the same filing. It is emphasis for the equity audience, not concealment."
+    }
+  ],
+  "trackAnalysis": "SAMPLE: On the large-public track, the proxy statement is the highest-value evidence source because it converts strategy into paid-for behavior: the annual incentive plan for SAMPLE CO weights adjusted EPS at 60% and includes no reinvestment or customer metric, which is what makes the innovation claim in the shareholder letter testable rather than merely unverified. Disclosure volume is the advantage of this track and its trap — the stated and revealed positions here sit in the same document twenty-one pages apart (S-T2 versus R-T2), so the gaps come from reading across sections rather than from finding hidden information. The main limitation is that everything available is authored for an audience, including the proxy, so 'revealed' here means revealed by committed dollars and by metrics someone is paid on, not revealed by private intent."
+}
