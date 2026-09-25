@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Competitive Advantage Pyramid — Stated vs Revealed</title>
+<style>
+/* ---------- tokens ---------- */
+:root{
+  color-scheme: light;
+  --bg:#faf9f7;
+  --panel:#ffffff;
+  --panel-2:#f4f2ef;
+  --ink:#1b1c1e;
+  --ink-2:#4a4d52;
+  --muted:#6b6f76;
+  --line:#dcd7d0;
+  --line-2:#ebe7e1;
+  --stated:#2f5d9e;
+  --stated-soft:#eaf0f8;
+  --revealed:#a05a14;
+  --revealed-soft:#f8efe3;
+  --err:#9d1f1f;
+  --err-soft:#fbecec;
+  --warn:#7d5200;
+  --warn-soft:#fdf5e4;
+  --ok:#1d6b3c;
+  --ok-soft:#e9f4ec;
+  --hl:#c8a200;
+  --radius:6px;
+  --serif: Georgia, "Times New Roman", "Nimbus Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme: dark;
+    --bg:#16181b;
+    --panel:#1e2125;
+    --panel-2:#252930;
+    --ink:#e9e7e4;
+    --ink-2:#c3c6cb;
+    --muted:#9aa0a8;
+    --line:#3a3f46;
+    --line-2:#2c3036;
+    --stated:#82aae0;
+    --stated-soft:#1b2634;
+    --revealed:#dda35c;
+    --revealed-soft:#2e2418;
+    --err:#f0908c;
+    --err-soft:#33201f;
+    --warn:#e3b45f;
+    --warn-soft:#2e2517;
+    --ok:#7fc99a;
+    --ok-soft:#18271d;
+    --hl:#e0c257;
+  }
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font:15px/1.55 var(--sans);
+}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 20px 80px}
+
+h1,h2,h3,h4{font-family:var(--serif);font-weight:600;letter-spacing:.1px}
+h1{font-size:25px;margin:0 0 6px}
+h2{font-size:19px;margin:0 0 4px}
+h3{font-size:16px;margin:0 0 6px}
+p{margin:0 0 10px}
+a{color:var(--stated)}
+a:hover{text-decoration:none}
+small{font-size:12.5px}
+code,.mono{font-family:var(--mono);font-size:12.5px}
+
+/* ---------- header ---------- */
+.masthead{border-bottom:2px solid var(--ink);padding-bottom:14px;margin-bottom:18px}
+.kicker{font:600 11.5px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:9px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;margin-top:10px;color:var(--ink-2);font-size:13.5px}
+.meta b{color:var(--ink)}
+.pill{display:inline-block;padding:2px 9px;border:1px solid var(--line);border-radius:999px;background:var(--panel);font-size:12.5px}
+
+/* ---------- toolbar ---------- */
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 18px}
+button{font:inherit;color:inherit}
+.btn{
+  appearance:none;background:var(--panel);border:1px solid var(--line);
+  border-radius:var(--radius);padding:6px 12px;font-size:13.5px;cursor:pointer;
+}
+.btn:hover{background:var(--panel-2)}
+.btn:focus-visible,.el:focus-visible,.gap-card:focus-visible,th button:focus-visible{outline:2px solid var(--hl);outline-offset:2px}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.spacer{flex:1 1 auto}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-size:12.5px;color:var(--ink-2)}
+.legend .swatch{display:inline-block;width:11px;height:11px;border-radius:2px;vertical-align:-1px;margin-right:5px}
+
+/* ---------- sections ---------- */
+section{margin:0 0 30px}
+.sec-head{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:14px}
+.sec-head .hint{color:var(--muted);font-size:12.5px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
+
+/* ---------- data checks ---------- */
+#checks .card{border-left:4px solid var(--ok)}
+#checks.has-warn .card{border-left-color:var(--warn)}
+#checks.has-err .card{border-left-color:var(--err)}
+.check-counts{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:2px}
+.tag{font:600 12px/1.6 var(--sans);padding:1px 8px;border-radius:999px}
+.tag.err{background:var(--err-soft);color:var(--err)}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.check-list{list-style:none;margin:10px 0 0;padding:0;font-size:13.5px}
+.check-list li{padding:5px 0 5px 22px;position:relative;border-top:1px solid var(--line-2)}
+.check-list li:before{position:absolute;left:0;top:5px;font-weight:700}
+.check-list li.err{color:var(--err)}
+.check-list li.err:before{content:"✕";color:var(--err)}
+.check-list li.warn{color:var(--warn)}
+.check-list li.warn:before{content:"!";color:var(--warn)}
+.check-list .where{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.check-list.collapsed > li:nth-child(n+7){display:none}
+#checks-more{margin-top:10px}
+
+/* ---------- pyramids ---------- */
+.pyramids{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.pyr{min-width:0}
+.pyr-head{text-align:center;margin-bottom:10px}
+.pyr-head h3{margin:0}
+.pyr.stated .pyr-head h3{color:var(--stated)}
+.pyr.revealed .pyr-head h3{color:var(--revealed)}
+.pyr-head .sub{color:var(--muted);font-size:12.5px}
+
+.tier{position:relative;margin-bottom:5px}
+.tier-shape{position:absolute;inset:0;background:var(--panel-2)}
+.tier.top .tier-shape{clip-path:polygon(24% 0, 76% 0, 84% 100%, 16% 100%)}
+.tier.middle .tier-shape{clip-path:polygon(16% 0, 84% 0, 92% 100%, 8% 100%)}
+.tier.base .tier-shape{clip-path:polygon(8% 0, 92% 0, 100% 100%, 0 100%)}
+.pyr.stated .tier.top .tier-shape{background:color-mix(in srgb, var(--stated) 22%, var(--panel))}
+.pyr.stated .tier.middle .tier-shape{background:color-mix(in srgb, var(--stated) 14%, var(--panel))}
+.pyr.stated .tier.base .tier-shape{background:color-mix(in srgb, var(--stated) 8%, var(--panel))}
+.pyr.revealed .tier.top .tier-shape{background:color-mix(in srgb, var(--revealed) 22%, var(--panel))}
+.pyr.revealed .tier.middle .tier-shape{background:color-mix(in srgb, var(--revealed) 14%, var(--panel))}
+.pyr.revealed .tier.base .tier-shape{background:color-mix(in srgb, var(--revealed) 8%, var(--panel))}
+
+.tier-body{position:relative;padding:10px 26% 13px}
+.tier.middle .tier-body{padding-left:18%;padding-right:18%}
+.tier.base .tier-body{padding-left:10%;padding-right:10%}
+.tier-label{font:600 10.5px/1.4 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);text-align:center;margin-bottom:8px}
+.tier-label .lyr{display:block;font-weight:400;letter-spacing:.04em;text-transform:none;color:var(--muted);font-size:11.5px}
+.tier-els{display:flex;flex-direction:column;gap:6px}
+
+.el{
+  display:block;width:100%;text-align:left;cursor:pointer;
+  background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--muted);
+  border-radius:4px;padding:7px 9px;font-size:13px;line-height:1.4;
+}
+.pyr.stated .el{border-left-color:var(--stated)}
+.pyr.revealed .el{border-left-color:var(--revealed)}
+.el:hover{background:var(--panel-2)}
+.el[aria-pressed="true"]{box-shadow:inset 0 0 0 1px var(--ink);border-color:var(--ink)}
+.el.hl{background:color-mix(in srgb, var(--hl) 18%, var(--panel));border-color:var(--hl)}
+.el-top{display:flex;gap:6px;align-items:center;margin-bottom:3px;flex-wrap:wrap}
+.el-id{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.03em}
+.rc{
+  font:700 10px/14px var(--sans);width:15px;height:15px;border-radius:3px;text-align:center;
+  background:var(--ink);color:var(--bg);flex:0 0 auto;
+}
+.rc.capability{background:var(--panel);color:var(--ink);border:1px solid var(--ink);line-height:13px}
+.gapmark{font-size:10px;color:var(--hl);letter-spacing:.1em;margin-left:auto}
+.el-claim{display:block;color:var(--ink)}
+
+/* ---------- element detail ---------- */
+#detail .card{min-height:96px}
+.detail-empty{color:var(--muted);font-size:13.5px}
+.detail-head{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.badge{font:600 11px/1.7 var(--sans);padding:0 8px;border-radius:3px;letter-spacing:.04em;text-transform:uppercase}
+.badge.stated{background:var(--stated-soft);color:var(--stated)}
+.badge.revealed{background:var(--revealed-soft);color:var(--revealed)}
+.badge.layer{background:var(--panel-2);color:var(--ink-2)}
+.metric{
+  font-family:var(--mono);font-size:12.5px;background:var(--panel-2);
+  border:1px dashed var(--line);border-radius:4px;padding:6px 9px;margin:8px 0
+}
+.cites{list-style:none;margin:8px 0 0;padding:0}
+.cites li{border-top:1px solid var(--line-2);padding:8px 0}
+.cite-line{font-size:13px}
+.cite-line b{font-weight:600}
+.cite-sep{color:var(--muted);padding:0 5px}
+.excerpt{
+  margin:5px 0 0;padding:6px 0 6px 11px;border-left:2px solid var(--line);
+  color:var(--ink-2);font-family:var(--serif);font-size:13.5px
+}
+.cite-foot{font-size:11.5px;color:var(--muted);margin-top:4px}
+.detail-block h4{margin:14px 0 2px;font-size:13.5px}
+
+/* all-details (print / print-preview only) */
+#all-details{display:none}
+.ad-item{border-top:1px solid var(--line-2);padding:10px 0;break-inside:avoid}
+.ad-item:first-child{border-top:0}
+
+/* ---------- gaps ---------- */
+.gap-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.gap-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:14px 16px;cursor:default;break-inside:avoid
+}
+.gap-card.active{border-color:var(--hl);box-shadow:0 0 0 1px var(--hl)}
+.gap-head{display:flex;gap:9px;align-items:baseline;margin-bottom:10px}
+.gap-id{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.sides{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.side{border:1px solid var(--line-2);border-radius:4px;padding:8px 9px;background:var(--panel-2)}
+.side h4{margin:0 0 5px;font:600 10.5px/1.4 var(--sans);letter-spacing:.11em;text-transform:uppercase}
+.side.stated h4{color:var(--stated)}
+.side.revealed h4{color:var(--revealed)}
+.side ul{margin:0;padding:0;list-style:none;font-size:12.5px}
+.side li{margin:0 0 4px}
+.side .cid{font-family:var(--mono);font-size:11px;color:var(--muted);margin-right:5px}
+.gap-field{margin:0 0 9px;font-size:13.5px}
+.gap-field .lbl{font:600 10.5px/1.5 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--muted);display:block}
+.cls{display:inline-block;font:600 12px/1.7 var(--sans);padding:0 9px;border-radius:3px}
+.cls.deliberate{background:var(--stated-soft);color:var(--stated)}
+.cls.misalignment{background:var(--err-soft);color:var(--err)}
+.cls.unclear{background:var(--warn-soft);color:var(--warn)}
+
+/* ---------- method / track ---------- */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.method-block h4{margin:0 0 5px;font:600 10.5px/1.5 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--muted)}
+.method-block ul{margin:0 0 12px;padding-left:20px;font-size:13.5px}
+.method-block li{margin-bottom:5px}
+.prose{font-family:var(--serif);font-size:14.5px;line-height:1.65}
+
+/* ---------- citation table ---------- */
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line-2);vertical-align:top}
+thead th{background:var(--panel-2);border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0}
+th button{
+  appearance:none;background:none;border:0;padding:0;font:600 12px/1.4 var(--sans);
+  cursor:pointer;display:inline-flex;gap:4px;align-items:center
+}
+th .arrow{color:var(--muted);font-size:9px}
+tbody tr:hover{background:var(--panel-2)}
+td.id,td.page{font-family:var(--mono);font-size:11.5px;white-space:nowrap}
+td.pyr-cell{white-space:nowrap}
+td.pyr-cell.stated{color:var(--stated)}
+td.pyr-cell.revealed{color:var(--revealed)}
+.footnote{color:var(--muted);font-size:12px;margin-top:8px}
+
+/* ---------- responsive ---------- */
+@media (max-width:860px){
+  .pyramids{grid-template-columns:1fr;gap:30px}
+  .two-col{grid-template-columns:1fr}
+  .tier-body{padding-left:16%;padding-right:16%}
+  .tier.middle .tier-body{padding-left:11%;padding-right:11%}
+  .tier.base .tier-body{padding-left:6%;padding-right:6%}
+  .tier.top .tier-shape{clip-path:polygon(14% 0, 86% 0, 92% 100%, 8% 100%)}
+  .tier.middle .tier-shape{clip-path:polygon(8% 0, 92% 0, 96% 100%, 4% 100%)}
+  .tier.base .tier-shape{clip-path:polygon(4% 0, 96% 0, 100% 100%, 0 100%)}
+  .sides{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  .wrap{padding:20px 14px 60px}
+  h1{font-size:21px}
+}
+
+/* ---------- print + on-screen print preview ---------- */
+.pp-only{display:none}
+body.print-preview .pp-only{display:block}
+body.print-preview .no-print{display:none!important}
+body.print-preview #detail{display:none}
+body.print-preview #all-details{display:block}
+body.print-preview .check-list.collapsed > li:nth-child(n+7){display:list-item}
+body.print-preview .wrap{max-width:900px}
+body.print-preview .pyramids{grid-template-columns:1fr 1fr;gap:18px}
+
+@media print{
+  @page{size:letter portrait;margin:14mm}
+  :root{
+    color-scheme:light;
+    --bg:#fff;--panel:#fff;--panel-2:#f2f2f0;--ink:#000;--ink-2:#222;--muted:#555;
+    --line:#b9b9b4;--line-2:#dedcd8;--stated:#1b4a87;--stated-soft:#eef2f8;
+    --revealed:#8a4a0c;--revealed-soft:#f8f0e6;--err:#8a1010;--warn:#6a4400;--ok:#14562f;--hl:#8a7400;
+  }
+  html,body{background:#fff;color:#000;font-size:10.5pt}
+  body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .wrap{max-width:none;padding:0}
+  .no-print{display:none!important}
+  .pp-only{display:block}
+  #detail{display:none!important}
+  #all-details{display:block}
+  .check-list.collapsed > li:nth-child(n+7){display:list-item}
+  .pyramids{grid-template-columns:1fr 1fr!important;gap:14px}
+  section{margin-bottom:16px}
+  #pyramids{break-after:page;page-break-after:always}
+  #all-details{break-after:page;page-break-after:always}
+  #gaps{break-after:page;page-break-after:always}
+  .gap-grid{grid-template-columns:1fr}
+  .card,.gap-card,.ad-item,.tier,.pyr{break-inside:avoid;page-break-inside:avoid}
+  h2,h3{break-after:avoid}
+  .table-wrap{overflow:visible;border:1px solid var(--line)}
+  thead th{position:static}
+  table{font-size:8.5pt}
+  .el{box-shadow:none!important}
+  .el.hl{background:#fff;border-color:var(--line)}
+  a{color:#000;text-decoration:none}
+  a[href^="http"]:after{content:" (" attr(href) ")";font-size:7.5pt;color:#555;word-break:break-all}
+  .masthead{border-bottom-width:1.5px}
+}
+</style>
+</head>
+<body>
+<script id="evidence-data" type="application/json">{"company":{"name":"SAMPLE CO","ticker":"SAMPLE: SMPL","track":"large-public","analysisDate":"SAMPLE: 2026-09-25"},"method":{"summary":"SAMPLE: This analysis compares what SAMPLE CO says about its competitive advantage (stated pyramid, drawn from investor-facing narrative documents) against what its resource-allocation and incentive decisions show (revealed pyramid, drawn from compensation disclosure, cash-flow statements, and segment reporting). Each element on both pyramids is tied to at least one citation with document, section, and page.","inclusionRules":["SAMPLE: Stated-pyramid elements must come from a document the company authored for external audiences (10-K Item 1, annual letter, investor day deck).","SAMPLE: Revealed-pyramid elements must be supported by a decision with a dollar figure, a governance vote, or a measurable operational change — not by management commentary.","SAMPLE: A claim repeated in only one document is excluded unless it is quantified.","SAMPLE: Where stated and revealed evidence conflict, both are kept and the conflict is logged as a gap rather than resolved in favor of either."],"timeWindow":"SAMPLE: Fiscal years 2023-2025, plus the 2026 proxy statement filed after FY2025 year-end.","limitations":["SAMPLE: Only public filings were used; no interviews or internal documents were available.","SAMPLE: Segment-level R\u0026D is not separately disclosed, so reinvestment intensity is estimated at the consolidated level.","SAMPLE: Three years is too short to separate a deliberate strategic shift from a single-cycle response to interest rates."]},"elements":[{"id":"S-B1","pyramid":"stated","layer":"base","claim":"SAMPLE: Long-term customer trust before short-term margin","detail":"SAMPLE: The shareholder letter positions customer trust as the value that overrides quarterly margin pressure, and repeats it as the first of four stated operating principles.","rcType":null,"evidence":[{"document":"SAMPLE: 2025 Annual Report","section":"SAMPLE: Letter to Shareholders","page":"3","excerpt":"SAMPLE: We will accept lower near-term margin where the alternative is spending down the trust our customers have placed in us.","url":"https://example.com/sample-annual-report-2025","accessed":"2026-09-14"},{"document":"SAMPLE: FY2025 Form 10-K","section":"SAMPLE: Item 1 – Business, Our Operating Principles","page":"6","excerpt":"SAMPLE: Principle one: earn customer trust over the long term.","url":"","accessed":"2026-09-14"}],"metric":""},{"id":"S-B2","pyramid":"stated","layer":"base","claim":"SAMPLE: Innovation-first culture as the core priority","detail":"SAMPLE: Management describes an innovation-first culture as the source of durable advantage, and frames reinvestment as the expression of that priority.","rcType":null,"evidence":[{"document":"SAMPLE: 2025 Investor Day Deck","section":"SAMPLE: Slide 4 – How We Win","page":"4","excerpt":"SAMPLE: Our advantage is cultural before it is technical: we fund the next platform before the market asks for it.","url":"","accessed":"2026-09-14"}],"metric":""},{"id":"S-M1","pyramid":"stated","layer":"middle","claim":"SAMPLE: Proprietary 40M-record customer data asset","detail":"SAMPLE: The company presents its accumulated first-party data set as a hard-to-replicate asset that improves personalization and underwrites pricing decisions.","rcType":"resource","evidence":[{"document":"SAMPLE: FY2025 Form 10-K","section":"SAMPLE: Item 1 – Business, Technology and Data","page":"11","excerpt":"SAMPLE: Our data set of approximately 40 million customer records cannot be reconstructed by a new entrant.","url":"","accessed":"2026-09-14"}],"metric":"SAMPLE: ~40M first-party records as of FY2025 year-end"},{"id":"S-M2","pyramid":"stated","layer":"middle","claim":"SAMPLE: Rapid product experimentation capability","detail":"SAMPLE: Management claims a repeatable capability to test and ship product changes faster than competitors, citing an internal release cadence figure.","rcType":"capability","evidence":[{"document":"SAMPLE: 2025 Investor Day Deck","section":"SAMPLE: Slide 12 – Product Velocity","page":"12","excerpt":"SAMPLE: We run more than 900 live experiments per quarter and ship weekly.","url":"","accessed":"2026-09-14"}],"metric":"SAMPLE: 900+ experiments/quarter claimed, FY2025"},{"id":"S-T1","pyramid":"stated","layer":"top","claim":"SAMPLE: Sustained R\u0026D investment in the next-gen platform","detail":"SAMPLE: The stated activity that carries the innovation priority is continued funding of a multi-year platform rebuild, described as the company's largest capital commitment.","rcType":null,"evidence":[{"document":"SAMPLE: 2025 Annual Report","section":"SAMPLE: MD\u0026A – Capital Allocation Priorities","page":"28","excerpt":"SAMPLE: Platform reinvestment remains our first call on capital.","url":"","accessed":"2026-09-14"}],"metric":""},{"id":"S-T2","pyramid":"stated","layer":"top","claim":"SAMPLE: In-house, direct-to-customer service model","detail":"SAMPLE: The company states that customer service is delivered by its own employees because service contact is where trust is earned or lost.","rcType":null,"evidence":[{"document":"SAMPLE: FY2025 Form 10-K","section":"SAMPLE: Item 1 – Business, Customer Operations","page":"9","excerpt":"SAMPLE: We staff customer support internally rather than through third parties.","url":"","accessed":"2026-09-14"}],"metric":""},{"id":"R-B1","pyramid":"revealed","layer":"base","claim":"SAMPLE: Capital return ranks above reinvestment","detail":"SAMPLE: Three years of cash deployment and the incentive plan's metric weighting both place returned capital ahead of reinvestment, which is the priority the decisions reveal.","rcType":null,"evidence":[{"document":"SAMPLE: 2026 DEF 14A","section":"SAMPLE: CD\u0026A – Annual Incentive Plan Metrics","page":"47","excerpt":"SAMPLE: Adjusted EPS carries a 60% weighting; no innovation or reinvestment metric is included in the annual plan.","url":"https://example.com/sample-def-14a-2026","accessed":"2026-09-16"},{"document":"SAMPLE: FY2025 Form 10-K","section":"SAMPLE: Consolidated Statements of Cash Flows","page":"F-7","excerpt":"SAMPLE: Repurchases of common stock of $2,400 million versus research and development of $610 million.","url":"","accessed":"2026-09-16"}],"metric":"SAMPLE: Buybacks $2.4B vs R\u0026D $0.61B, FY2023-25 cumulative 3.9x"},{"id":"R-B2","pyramid":"revealed","layer":"base","claim":"SAMPLE: Unit-cost discipline is the dominant operating value","detail":"SAMPLE: Cost per order is the only operating metric tied to bonus payout at every management level, and the restructuring charge shows the company acting on it.","rcType":null,"evidence":[{"document":"SAMPLE: 2026 DEF 14A","section":"SAMPLE: CD\u0026A – Cascaded Scorecards","page":"52","excerpt":"SAMPLE: Cost per order appears on every management scorecard below the executive level.","url":"","accessed":"2026-09-16"},{"document":"SAMPLE: FY2025 Form 10-K","section":"SAMPLE: Note 14 – Restructuring","page":"F-31","excerpt":"SAMPLE: Charges of $180 million, substantially all related to service and fulfillment headcount.","url":"","accessed":"2026-09-16"}],"metric":"SAMPLE: $180M restructuring charge, FY2025"},{"id":"R-M1","pyramid":"revealed","layer":"middle","claim":"SAMPLE: Owned low-cost depot and distribution network","detail":"SAMPLE: The asset the company actually funded over the window is physical distribution, not the data platform; depot count and capex disclosure both point to it.","rcType":"resource","evidence":[{"document":"SAMPLE: FY2025 Form 10-K","section":"SAMPLE: Item 2 – Properties","page":"19","excerpt":"SAMPLE: We operated 64 owned depots at year-end, up from 41 three years earlier.","url":"","accessed":"2026-09-16"},{"document":"SAMPLE: FY2025 Form 10-K","section":"SAMPLE: MD\u0026A – Capital Expenditures","page":"31","excerpt":"SAMPLE: Distribution assets represented 71% of FY2025 capital expenditures.","url":"","accessed":"2026-09-16"}],"metric":"SAMPLE: 64 depots (from 41); 71% of FY2025 capex"},{"id":"R-M2","pyramid":"revealed","layer":"middle","claim":"SAMPLE: Procurement and vendor-renegotiation capability","detail":"SAMPLE: The repeatable skill the company demonstrates and rewards is extracting supplier concessions, evidenced by disclosed payable-days extension and a dedicated incentive metric.","rcType":"capability","evidence":[{"document":"SAMPLE: 2026 DEF 14A","section":"SAMPLE: CD\u0026A – Individual Objectives, COO","page":"55","excerpt":"SAMPLE: Supplier cost recovery of $95 million was achieved against a $70 million objective.","url":"","accessed":"2026-09-16"},{"document":"SAMPLE: FY2025 Form 10-K","section":"SAMPLE: MD\u0026A – Working Capital","page":"33","excerpt":"SAMPLE: Days payable outstanding increased to 78 days from 54 days in FY2023.","url":"","accessed":"2026-09-16"}],"metric":"SAMPLE: DPO 54 to 78 days; $95M supplier cost recovery vs $70M target"},{"id":"R-T1","pyramid":"revealed","layer":"top","claim":"SAMPLE: Expanded buyback and initiated dividend","detail":"SAMPLE: The largest discretionary activity of the window was returning capital: the repurchase authorization was raised and a first dividend was declared in the same year as the restructuring.","rcType":null,"evidence":[{"document":"SAMPLE: FY2025 Form 10-K","section":"SAMPLE: Note 11 – Shareholders' Equity","page":"F-26","excerpt":"SAMPLE: The Board increased the repurchase authorization to $3,000 million and declared the company's first quarterly dividend.","url":"","accessed":"2026-09-16"}],"metric":"SAMPLE: Authorization raised to $3.0B; first dividend declared FY2025"},{"id":"R-T2","pyramid":"revealed","layer":"top","claim":"SAMPLE: Outsourced tier-1 customer service offshore","detail":"SAMPLE: Despite the stated in-house service model, the company moved the majority of first-contact support to a third-party vendor during FY2025.","rcType":null,"evidence":[{"document":"SAMPLE: FY2025 Form 10-K","section":"SAMPLE: MD\u0026A – Operating Expenses","page":"30","excerpt":"SAMPLE: Approximately 60% of first-contact support volume transitioned to an outsourced provider during the year.","url":"","accessed":"2026-09-16"},{"document":"SAMPLE: FY2025 Q3 Earnings Call Transcript","section":"SAMPLE: Prepared Remarks – CFO","page":"4","excerpt":"SAMPLE: The support transition contributes roughly 40 basis points of margin in FY2026.","url":"","accessed":"2026-09-16"}],"metric":"SAMPLE: ~60% of tier-1 contacts outsourced, FY2025"}],"gaps":[{"id":"G1","title":"SAMPLE: Innovation-first narrative, capital-return incentives","statedIds":["S-B2","S-T1"],"revealedIds":["R-B1","R-T1"],"whatDiffers":"SAMPLE: The stated pyramid makes reinvestment the first call on capital, while the revealed pyramid shows $2.4B returned against $0.61B of R\u0026D and an annual bonus plan with no reinvestment metric at all.","strategicMeaning":"SAMPLE: The advantage the company is actually managing for is cash-return reliability, not product leadership. If the platform rebuild is genuinely the source of future advantage, no one at the company is paid to deliver it, so the stated priority is unlikely to survive a year of margin pressure.","classification":"misalignment","classificationReasoning":"SAMPLE: Classified as misalignment rather than positioning because the divergence appears inside the incentive system, which is not an audience-facing document. Management would have had to choose an EPS-weighted plan whether or not it talked about innovation externally."},{"id":"G2","title":"SAMPLE: In-house service claim, outsourced service reality","statedIds":["S-B1","S-T2"],"revealedIds":["R-T2"],"whatDiffers":"SAMPLE: The 10-K business description states that support is staffed internally rather than through third parties; the MD\u0026A twenty-one pages later discloses that about 60% of first-contact volume moved to an outsourced provider in the same fiscal year.","strategicMeaning":"SAMPLE: Trust is stated as the base value but is being traded for roughly 40 basis points of margin at the exact point of customer contact. The stated advantage and the revealed advantage are drawing on the same operating budget, and cost is winning.","classification":"unclear","classificationReasoning":"SAMPLE: Left unclear because the disclosures may not be contradictory in the company's own reading: the retained 40% of volume may be the segment it considers trust-critical. Resolving this needs the service-tiering detail, which is not public."},{"id":"G3","title":"SAMPLE: Data asset claimed, distribution asset funded","statedIds":["S-M1"],"revealedIds":["R-M1","R-M2"],"whatDiffers":"SAMPLE: The stated middle layer names a proprietary data resource as the hard-to-copy asset, but 71% of capital expenditure went to depots and the only rewarded capability is supplier renegotiation.","strategicMeaning":"SAMPLE: The real resource base is physical and the real capability is procurement — an advantage that is defensible but scale-dependent and imitable by any competitor of similar size. The data asset is an unfunded claim, so it should be treated as a stated aspiration rather than a current source of advantage.","classification":"deliberate positioning","classificationReasoning":"SAMPLE: Read as deliberate positioning because a data narrative attracts a higher multiple than a distribution narrative, and the company is transparent about the capex mix in the same filing. It is emphasis for the equity audience, not concealment."}],"trackAnalysis":"SAMPLE: On the large-public track, the proxy statement is the highest-value evidence source because it converts strategy into paid-for behavior: the annual incentive plan for SAMPLE CO weights adjusted EPS at 60% and includes no reinvestment or customer metric, which is what makes the innovation claim in the shareholder letter testable rather than merely unverified. Disclosure volume is the advantage of this track and its trap — the stated and revealed positions here sit in the same document twenty-one pages apart (S-T2 versus R-T2), so the gaps come from reading across sections rather than from finding hidden information. The main limitation is that everything available is authored for an audience, including the proxy, so 'revealed' here means revealed by committed dollars and by metrics someone is paid on, not revealed by private intent."}</script>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="kicker">Competitive Advantage Pyramid · Stated vs Revealed</div>
+    <h1 id="co-name">—</h1>
+    <div class="meta" id="co-meta"></div>
+  </header>
+
+  <div class="toolbar no-print">
+    <button class="btn" id="btn-preview" aria-pressed="false">Print view</button>
+    <button class="btn" id="btn-print">Print / Save PDF</button>
+    <div class="spacer"></div>
+    <div class="legend">
+      <span><span class="swatch" style="background:var(--stated)"></span>Stated</span>
+      <span><span class="swatch" style="background:var(--revealed)"></span>Revealed</span>
+      <span><span class="rc" style="display:inline-block;vertical-align:-3px">R</span> Resource</span>
+      <span><span class="rc capability" style="display:inline-block;vertical-align:-3px">C</span> Capability</span>
+      <span><span class="gapmark" style="margin:0">◆</span> in a gap</span>
+    </div>
+  </div>
+
+  <section id="checks">
+    <div class="sec-head">
+      <h2>Data checks</h2>
+      <div class="hint">Validation of <code>evidence.json</code> — citation completeness, resource/capability labels, gap references.</div>
+    </div>
+    <div class="card" id="checks-card"></div>
+  </section>
+
+  <section id="pyramids">
+    <div class="sec-head">
+      <h2>The two pyramids</h2>
+      <div class="hint no-print">Click an element for its detail and full citations. Hover a gap card below to highlight its linked elements here.</div>
+      <div class="hint pp-only">Element details and full citations for every element follow on the next page.</div>
+    </div>
+    <div class="pyramids">
+      <div class="pyr stated" id="pyr-stated"></div>
+      <div class="pyr revealed" id="pyr-revealed"></div>
+    </div>
+  </section>
+
+  <section id="detail" class="no-print">
+    <div class="sec-head">
+      <h2>Element detail</h2>
+      <div class="hint">Selected element, with every citation behind it.</div>
+    </div>
+    <div class="card" id="detail-card"><span class="detail-empty">No element selected. Click any element in a pyramid above.</span></div>
+  </section>
+
+  <section id="all-details">
+    <div class="sec-head">
+      <h2>Element details and citations</h2>
+      <div class="hint">Every element on both pyramids, with all citations expanded.</div>
+    </div>
+    <div class="card" id="all-details-card"></div>
+  </section>
+
+  <section id="gaps">
+    <div class="sec-head">
+      <h2>Gap analysis</h2>
+      <div class="hint no-print">One card per stated-vs-revealed gap. Hover or focus a card to highlight the elements it links.</div>
+    </div>
+    <div class="gap-grid" id="gap-grid"></div>
+  </section>
+
+  <section id="method">
+    <div class="sec-head"><h2>Method</h2></div>
+    <div class="card" id="method-card"></div>
+  </section>
+
+  <section id="track">
+    <div class="sec-head">
+      <h2>Track analysis</h2>
+      <div class="hint" id="track-hint"></div>
+    </div>
+    <div class="card"><div class="prose" id="track-body"></div></div>
+  </section>
+
+  <section id="citations">
+    <div class="sec-head">
+      <h2>Full citation table</h2>
+      <div class="hint">Every evidence entry behind both pyramids. <span class="no-print">Click a column heading to sort.</span></div>
+    </div>
+    <div class="table-wrap">
+      <table id="cite-table">
+        <thead><tr id="cite-head"></tr></thead>
+        <tbody id="cite-body"></tbody>
+      </table>
+    </div>
+    <div class="footnote" id="cite-count"></div>
+  </section>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================ data ============================ */
+var DATA;
+try{
+  DATA = JSON.parse(document.getElementById('evidence-data').textContent);
+}catch(err){
+  document.getElementById('checks-card').innerHTML =
+    '<div class="check-counts"><span class="tag err">Data error</span></div>' +
+    '<p>evidence.json could not be parsed: ' + esc(String(err && err.message || err)) + '</p>';
+  return;
+}
+
+var LAYERS = [
+  {key:'top',    label:'Top',    gloss:'Activities'},
+  {key:'middle', label:'Middle', gloss:'Resources & capabilities'},
+  {key:'base',   label:'Base',   gloss:'Values & priorities'}
+];
+var PYRAMIDS = ['stated','revealed'];
+
+function esc(s){
+  return String(s === undefined || s === null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function has(v){ return v !== undefined && v !== null && String(v).trim() !== ''; }
+function arr(v){ return Array.isArray(v) ? v : []; }
+
+var elements = arr(DATA.elements);
+var gaps = arr(DATA.gaps);
+var byId = {};
+elements.forEach(function(el){ if(el && has(el.id) && !byId[el.id]) byId[el.id] = el; });
+
+/* element id -> gap ids it appears in */
+var gapsOf = {};
+gaps.forEach(function(g){
+  arr(g.statedIds).concat(arr(g.revealedIds)).forEach(function(id){
+    (gapsOf[id] = gapsOf[id] || []).push(g.id || '?');
+  });
+});
+
+/* ========================== validation ==========================
+   These rules are mirrored in build.py — keep the two in step.     */
+function validate(d){
+  var errors = [], warnings = [];
+  var els = arr(d.elements), gs = arr(d.gaps);
+  var seen = {};
+
+  if(!els.length) errors.push({where:'elements', msg:'No elements found in the data.'});
+
+  els.forEach(function(el, i){
+    el = el || {};
+    var where = 'elements[' + i + ']' + (has(el.id) ? ' ' + el.id : '');
+    if(!has(el.id)){
+      errors.push({where:where, msg:'Element has no id.'});
+    }else if(seen[el.id]){
+      errors.push({where:where, msg:'Duplicate element id "' + el.id + '".'});
+    }else{
+      seen[el.id] = el;
+    }
+    if(PYRAMIDS.indexOf(el.pyramid) < 0)
+      errors.push({where:where, msg:'pyramid must be "stated" or "revealed" (found ' + JSON.stringify(el.pyramid === undefined ? null : el.pyramid) + ').'});
+    if(['base','middle','top'].indexOf(el.layer) < 0)
+      errors.push({where:where, msg:'layer must be "base", "middle" or "top" (found ' + JSON.stringify(el.layer === undefined ? null : el.layer) + ').'});
+    if(!has(el.claim)) errors.push({where:where, msg:'claim is empty — nothing to show on the pyramid.'});
+
+    var ev = arr(el.evidence);
+    if(el.pyramid === 'revealed' && ev.length === 0)
+      errors.push({where:where, msg:'Revealed element has no evidence entries.'});
+    if(el.pyramid === 'stated' && ev.length === 0)
+      warnings.push({where:where, msg:'Stated element has no evidence entries.'});
+    ev.forEach(function(e, j){
+      e = e || {};
+      ['document','section','page'].forEach(function(f){
+        if(!has(e[f]))
+          errors.push({where:where + ' evidence[' + j + ']', msg:'Citation is missing "' + f + '".'});
+      });
+      if(!has(e.excerpt))
+        warnings.push({where:where + ' evidence[' + j + ']', msg:'Citation has no excerpt.'});
+      if(!has(e.accessed))
+        warnings.push({where:where + ' evidence[' + j + ']', msg:'Citation has no accessed date.'});
+    });
+
+    if(el.layer === 'middle'){
+      if(el.rcType !== 'resource' && el.rcType !== 'capability')
+        errors.push({where:where, msg:'Middle-layer element needs rcType "resource" or "capability" (found ' + JSON.stringify(el.rcType === undefined ? null : el.rcType) + ').'});
+    }else if(has(el.rcType)){
+      warnings.push({where:where, msg:(el.layer || 'this') + '-layer element has rcType "' + el.rcType + '" — expected null.'});
+    }
+  });
+
+  gs.forEach(function(g, i){
+    g = g || {};
+    var where = 'gaps[' + i + ']' + (has(g.id) ? ' ' + g.id : '');
+    if(!has(g.id)) warnings.push({where:where, msg:'Gap has no id.'});
+    [['statedIds','stated'],['revealedIds','revealed']].forEach(function(pair){
+      var ids = arr(g[pair[0]]);
+      if(!ids.length) warnings.push({where:where, msg:pair[0] + ' is empty.'});
+      ids.forEach(function(id){
+        var el = seen[id];
+        if(!el) errors.push({where:where, msg:pair[0] + ' references element id "' + id + '", which does not exist.'});
+        else if(el.pyramid !== pair[1])
+          warnings.push({where:where, msg:pair[0] + ' lists "' + id + '", but that element is on the ' + el.pyramid + ' pyramid.'});
+      });
+    });
+    if(['deliberate positioning','misalignment','unclear'].indexOf(g.classification) < 0)
+      errors.push({where:where, msg:'classification must be "deliberate positioning", "misalignment" or "unclear" (found ' + JSON.stringify(g.classification === undefined ? null : g.classification) + ').'});
+    if(!has(g.classificationReasoning))
+      warnings.push({where:where, msg:'classification has no reasoning.'});
+  });
+  if(gs.length < 2) warnings.push({where:'gaps', msg:'Only ' + gs.length + ' gap(s) defined — at least 2 expected.'});
+
+  /* placeholder scan */
+  var hits = [];
+  (function walk(v, path){
+    if(typeof v === 'string'){
+      if(v.indexOf('SAMPLE:') === 0) hits.push(path.join('.'));
+    }else if(Array.isArray(v)){
+      v.forEach(function(x, i){ walk(x, path.concat(String(i))); });
+    }else if(v && typeof v === 'object'){
+      Object.keys(v).forEach(function(k){ walk(v[k], path.concat(k)); });
+    }
+  })(d, []);
+  groupHits(hits).forEach(function(g){
+    warnings.push({where:g.where, msg:g.count + ' field(s) still start with "SAMPLE:" — placeholder data (' + g.fields + ').'});
+  });
+
+  return {errors:errors, warnings:warnings};
+}
+
+function groupHits(paths){
+  var order = [], map = {};
+  paths.forEach(function(p){
+    var parts = p.split('.');
+    var key = parts[0], rest = parts.slice(1);
+    if(/^\d+$/.test(parts[1] || '')){
+      key = parts[0] + '[' + parts[1] + ']';
+      rest = parts.slice(2);
+      var host = arr(DATA[parts[0]])[Number(parts[1])];
+      if(host && has(host.id)) key += ' ' + host.id;
+    }
+    if(!map[key]){ map[key] = {where:key, count:0, list:[]}; order.push(key); }
+    map[key].count++;
+    if(map[key].list.length < 4) map[key].list.push(rest.join('.') || '(value)');
+  });
+  return order.map(function(k){
+    var g = map[k];
+    g.fields = g.list.join(', ') + (g.count > g.list.length ? ', …' : '');
+    return g;
+  });
+}
+
+/* ========================== rendering ========================== */
+var TRACK_LABEL = {
+  'large-public':'Large public company',
+  'small-private':'Small private company',
+  'startup':'Startup'
+};
+
+function renderHeader(){
+  var c = DATA.company || {};
+  document.getElementById('co-name').textContent = has(c.name) ? c.name : 'Untitled company';
+  var bits = [];
+  if(has(c.ticker)) bits.push('<span><b>Ticker</b> ' + esc(c.ticker) + '</span>');
+  if(has(c.track)) bits.push('<span class="pill">' + esc(TRACK_LABEL[c.track] || c.track) + '</span>');
+  if(has(c.analysisDate)) bits.push('<span><b>Analysis date</b> ' + esc(c.analysisDate) + '</span>');
+  bits.push('<span><b>' + elements.length + '</b> elements · <b>' + gaps.length + '</b> gaps · <b>' + countCitations() + '</b> citations</span>');
+  document.getElementById('co-meta').innerHTML = bits.join('');
+  if(has(c.name)) document.title = c.name + ' — Competitive Advantage Pyramid';
+  document.getElementById('track-hint').textContent =
+    has(c.track) ? ('Track: ' + (TRACK_LABEL[c.track] || c.track)) : '';
+}
+
+function countCitations(){
+  return elements.reduce(function(n, el){ return n + arr(el && el.evidence).length; }, 0);
+}
+
+function renderChecks(res){
+  var sec = document.getElementById('checks');
+  var card = document.getElementById('checks-card');
+  sec.classList.toggle('has-err', res.errors.length > 0);
+  sec.classList.toggle('has-warn', res.errors.length === 0 && res.warnings.length > 0);
+
+  var head = '<div class="check-counts">';
+  head += res.errors.length
+    ? '<span class="tag err">' + res.errors.length + ' error' + (res.errors.length === 1 ? '' : 's') + '</span>'
+    : '<span class="tag ok">0 errors</span>';
+  head += res.warnings.length
+    ? '<span class="tag warn">' + res.warnings.length + ' warning' + (res.warnings.length === 1 ? '' : 's') + '</span>'
+    : '<span class="tag ok">0 warnings</span>';
+  head += '</div>';
+
+  if(!res.errors.length && !res.warnings.length){
+    card.innerHTML = head + '<p style="margin:8px 0 0">All data checks passed: every revealed element carries a citation with document, section and page; middle-layer elements are labelled resource or capability; every gap reference resolves.</p>';
+    return;
+  }
+  var items = res.errors.map(function(x){ return li('err', x); })
+    .concat(res.warnings.map(function(x){ return li('warn', x); }));
+  var collapse = items.length > 8;
+  card.innerHTML = head +
+    '<ul class="check-list' + (collapse ? ' collapsed' : '') + '">' + items.join('') + '</ul>' +
+    (collapse ? '<button type="button" class="btn no-print" id="checks-more" data-total="' + items.length +
+      '">Show all ' + items.length + ' checks</button>' : '');
+
+  function li(kind, x){
+    return '<li class="' + kind + '"><span class="where">' + esc(x.where) + '</span> — ' + esc(x.msg) + '</li>';
+  }
+}
+
+function elementsFor(pyramid, layer){
+  return elements.filter(function(el){ return el && el.pyramid === pyramid && el.layer === layer; });
+}
+
+function renderPyramids(){
+  PYRAMIDS.forEach(function(p){
+    var host = document.getElementById('pyr-' + p);
+    var html = '<div class="pyr-head"><h3>' + (p === 'stated' ? 'Stated' : 'Revealed') + '</h3>' +
+      '<div class="sub">' + (p === 'stated' ? 'What the company says' : 'What its decisions show') + '</div></div>';
+    LAYERS.forEach(function(L){
+      var els = elementsFor(p, L.key);
+      html += '<div class="tier ' + L.key + '">' +
+        '<div class="tier-shape" aria-hidden="true"></div>' +
+        '<div class="tier-body">' +
+          '<div class="tier-label">' + L.label + '<span class="lyr">' + L.gloss + '</span></div>' +
+          '<div class="tier-els">' +
+            (els.length ? els.map(chip).join('') : '<div class="detail-empty" style="text-align:center">No elements</div>') +
+          '</div>' +
+        '</div></div>';
+    });
+    host.innerHTML = html;
+  });
+}
+
+function chip(el){
+  var gl = gapsOf[el.id] || [];
+  var rc = '';
+  if(el.layer === 'middle' && (el.rcType === 'resource' || el.rcType === 'capability')){
+    rc = '<span class="rc ' + el.rcType + '" title="' + esc(el.rcType) + '">' +
+         (el.rcType === 'resource' ? 'R' : 'C') + '</span>';
+  }
+  var mark = gl.length
+    ? '<span class="gapmark" title="Appears in ' + esc(gl.join(', ')) + '">◆ ' + esc(gl.join(' ')) + '</span>'
+    : '';
+  return '<button type="button" class="el" data-el="' + esc(el.id) + '" aria-pressed="false">' +
+    '<span class="el-top"><span class="el-id">' + esc(el.id) + '</span>' + rc + mark + '</span>' +
+    '<span class="el-claim">' + esc(el.claim) + '</span></button>';
+}
+
+function citationsHTML(el){
+  var ev = arr(el.evidence);
+  if(!ev.length) return '<p class="detail-empty">No citations recorded for this element.</p>';
+  return '<ul class="cites">' + ev.map(function(e){
+    e = e || {};
+    var line = '<div class="cite-line"><b>' + esc(e.document || '(document missing)') + '</b>' +
+      '<span class="cite-sep">·</span>' + esc(e.section || '(section missing)') +
+      '<span class="cite-sep">·</span>p.&nbsp;' + esc(has(e.page) ? e.page : '(page missing)') + '</div>';
+    var ex = has(e.excerpt) ? '<blockquote class="excerpt">“' + esc(e.excerpt) + '”</blockquote>' : '';
+    var foot = [];
+    if(has(e.url)) foot.push('<a href="' + esc(e.url) + '" rel="noopener noreferrer" target="_blank">' + esc(e.url) + '</a>');
+    if(has(e.accessed)) foot.push('accessed ' + esc(e.accessed));
+    return '<li>' + line + ex + (foot.length ? '<div class="cite-foot">' + foot.join(' · ') + '</div>' : '') + '</li>';
+  }).join('') + '</ul>';
+}
+
+function detailHTML(el){
+  var gl = gapsOf[el.id] || [];
+  var rcText = (el.rcType === 'resource' || el.rcType === 'capability')
+    ? '<span class="badge layer">' + esc(el.rcType) + '</span>' : '';
+  var html = '<div class="detail-head">' +
+    '<span class="badge ' + esc(el.pyramid) + '">' + esc(el.pyramid) + '</span>' +
+    '<span class="badge layer">' + esc(el.layer) + '</span>' + rcText +
+    '<span class="el-id">' + esc(el.id) + '</span>' +
+    (gl.length ? '<span class="el-id">◆ ' + esc(gl.join(', ')) + '</span>' : '') +
+    '</div>';
+  html += '<h3>' + esc(el.claim) + '</h3>';
+  if(has(el.detail)) html += '<p>' + esc(el.detail) + '</p>';
+  if(has(el.metric)) html += '<div class="metric">' + esc(el.metric) + '</div>';
+  html += '<div class="detail-block"><h4>Citations (' + arr(el.evidence).length + ')</h4>' + citationsHTML(el) + '</div>';
+  return html;
+}
+
+function renderDetail(id){
+  var card = document.getElementById('detail-card');
+  var el = id && byId[id];
+  card.innerHTML = el ? detailHTML(el)
+    : '<span class="detail-empty">No element selected. Click any element in a pyramid above.</span>';
+}
+
+function renderAllDetails(){
+  var order = [];
+  PYRAMIDS.forEach(function(p){
+    LAYERS.forEach(function(L){ order = order.concat(elementsFor(p, L.key)); });
+  });
+  document.getElementById('all-details-card').innerHTML =
+    order.map(function(el){ return '<div class="ad-item">' + detailHTML(el) + '</div>'; }).join('')
+    || '<span class="detail-empty">No elements.</span>';
+}
+
+function clsKey(c){
+  if(c === 'misalignment') return 'misalignment';
+  if(c === 'unclear') return 'unclear';
+  return 'deliberate';
+}
+
+function renderGaps(){
+  var host = document.getElementById('gap-grid');
+  if(!gaps.length){
+    host.innerHTML = '<div class="card"><span class="detail-empty">No gaps recorded.</span></div>';
+    return;
+  }
+  host.innerHTML = gaps.map(function(g){
+    function side(kind, ids){
+      var items = arr(ids).map(function(id){
+        var el = byId[id];
+        return '<li><span class="cid">' + esc(id) + '</span>' +
+          esc(el ? el.claim : 'unknown element') + '</li>';
+      }).join('') || '<li class="detail-empty">none listed</li>';
+      return '<div class="side ' + kind + '"><h4>' + kind + '</h4><ul>' + items + '</ul></div>';
+    }
+    var linked = arr(g.statedIds).concat(arr(g.revealedIds)).join(' ');
+    return '<div class="gap-card" data-gap="' + esc(g.id) + '" data-els="' + esc(linked) + '" tabindex="0">' +
+      '<div class="gap-head"><span class="gap-id">' + esc(g.id) + '</span><h3>' + esc(g.title) + '</h3></div>' +
+      '<div class="sides">' + side('stated', g.statedIds) + side('revealed', g.revealedIds) + '</div>' +
+      '<p class="gap-field"><span class="lbl">What differs</span>' + esc(g.whatDiffers) + '</p>' +
+      '<p class="gap-field"><span class="lbl">Strategic meaning</span>' + esc(g.strategicMeaning) + '</p>' +
+      '<p class="gap-field"><span class="lbl">Classification</span>' +
+        '<span class="cls ' + clsKey(g.classification) + '">' + esc(g.classification) + '</span></p>' +
+      '<p class="gap-field"><span class="lbl">Reasoning</span>' + esc(g.classificationReasoning) + '</p>' +
+      '</div>';
+  }).join('');
+}
+
+function renderMethod(){
+  var m = DATA.method || {};
+  var html = '';
+  if(has(m.summary)) html += '<div class="method-block"><h4>Summary</h4><p class="prose">' + esc(m.summary) + '</p></div>';
+  html += '<div class="two-col">';
+  html += '<div class="method-block"><h4>Inclusion rules</h4><ul>' +
+    (arr(m.inclusionRules).filter(has).map(function(r){ return '<li>' + esc(r) + '</li>'; }).join('')
+      || '<li class="detail-empty">none recorded</li>') + '</ul></div>';
+  html += '<div class="method-block"><h4>Limitations</h4><ul>' +
+    (arr(m.limitations).filter(has).map(function(r){ return '<li>' + esc(r) + '</li>'; }).join('')
+      || '<li class="detail-empty">none recorded</li>') + '</ul></div>';
+  html += '</div>';
+  if(has(m.timeWindow)) html += '<div class="method-block"><h4>Time window</h4><p>' + esc(m.timeWindow) + '</p></div>';
+  document.getElementById('method-card').innerHTML = html;
+}
+
+function renderTrack(){
+  var t = DATA.trackAnalysis;
+  document.getElementById('track-body').innerHTML =
+    has(t) ? esc(t).replace(/\n\s*\n/g, '</p><p>').replace(/^/, '<p>') + '</p>'
+           : '<span class="detail-empty">No track analysis recorded.</span>';
+}
+
+/* ------------------------ citation table ------------------------ */
+var COLS = [
+  {key:'elementId', label:'Element'},
+  {key:'pyramid',   label:'Pyramid'},
+  {key:'layer',     label:'Layer'},
+  {key:'document',  label:'Document'},
+  {key:'section',   label:'Section'},
+  {key:'page',      label:'Page'},
+  {key:'accessed',  label:'Accessed'}
+];
+var LAYER_RANK = {base:0, middle:1, top:2};
+var rows = [];
+elements.forEach(function(el){
+  arr(el && el.evidence).forEach(function(e){
+    e = e || {};
+    rows.push({
+      elementId: el.id || '', pyramid: el.pyramid || '', layer: el.layer || '',
+      document: e.document || '', section: e.section || '', page: has(e.page) ? String(e.page) : '',
+      accessed: e.accessed || '', url: e.url || '', claim: el.claim || ''
+    });
+  });
+});
+var sort = {key:'elementId', dir:1};
+
+function sortRows(){
+  var k = sort.key;
+  rows.sort(function(a, b){
+    var av = a[k], bv = b[k], c;
+    if(k === 'layer'){
+      c = (LAYER_RANK[av] === undefined ? 9 : LAYER_RANK[av]) - (LAYER_RANK[bv] === undefined ? 9 : LAYER_RANK[bv]);
+    }else if(k === 'page'){
+      var an = parseFloat(av), bn = parseFloat(bv);
+      var aNum = !isNaN(an), bNum = !isNaN(bn);
+      if(aNum && bNum) c = an - bn;
+      else if(aNum !== bNum) c = aNum ? -1 : 1;
+      else c = String(av).localeCompare(String(bv));
+    }else{
+      c = String(av).localeCompare(String(bv), undefined, {numeric:true, sensitivity:'base'});
+    }
+    if(c) return c * sort.dir;
+    return String(a.elementId).localeCompare(String(b.elementId), undefined, {numeric:true});
+  });
+}
+
+function renderTable(){
+  sortRows();
+  document.getElementById('cite-head').innerHTML = COLS.map(function(c){
+    var on = sort.key === c.key;
+    var aria = on ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none';
+    return '<th aria-sort="' + aria + '"><button type="button" data-sort="' + c.key + '">' +
+      esc(c.label) + '<span class="arrow">' + (on ? (sort.dir === 1 ? '▲' : '▼') : '') + '</span></button></th>';
+  }).join('');
+
+  document.getElementById('cite-body').innerHTML = rows.map(function(r){
+    var doc = has(r.url)
+      ? '<a href="' + esc(r.url) + '" rel="noopener noreferrer" target="_blank">' + esc(r.document) + '</a>'
+      : esc(r.document);
+    return '<tr>' +
+      '<td class="id">' + esc(r.elementId) + '</td>' +
+      '<td class="pyr-cell ' + esc(r.pyramid) + '">' + esc(r.pyramid) + '</td>' +
+      '<td>' + esc(r.layer) + '</td>' +
+      '<td>' + doc + '</td>' +
+      '<td>' + esc(r.section) + '</td>' +
+      '<td class="page">' + esc(r.page) + '</td>' +
+      '<td class="page">' + esc(r.accessed) + '</td>' +
+      '</tr>';
+  }).join('') || '<tr><td colspan="' + COLS.length + '" class="detail-empty">No citations recorded.</td></tr>';
+
+  document.getElementById('cite-count').textContent =
+    rows.length + ' citation' + (rows.length === 1 ? '' : 's') + ' across ' + elements.length + ' elements.';
+}
+
+/* ========================= interaction ========================= */
+var selected = null;
+
+function setSelected(id){
+  selected = (selected === id) ? null : id;
+  document.querySelectorAll('.el').forEach(function(b){
+    b.setAttribute('aria-pressed', b.getAttribute('data-el') === selected ? 'true' : 'false');
+  });
+  renderDetail(selected);
+  if(selected){
+    var card = document.getElementById('detail-card');
+    var r = card.getBoundingClientRect();
+    if(r.top < 0 || r.bottom > window.innerHeight) card.scrollIntoView({block:'nearest'});
+  }
+}
+
+function highlight(ids){
+  var set = {};
+  (ids || []).forEach(function(i){ if(i) set[i] = 1; });
+  document.querySelectorAll('.el').forEach(function(b){
+    b.classList.toggle('hl', !!set[b.getAttribute('data-el')]);
+  });
+}
+
+document.addEventListener('click', function(ev){
+  var el = ev.target.closest ? ev.target.closest('.el') : null;
+  if(el){ setSelected(el.getAttribute('data-el')); return; }
+  if(ev.target.id === 'checks-more'){
+    var list = document.querySelector('.check-list');
+    var open = !list.classList.toggle('collapsed');
+    ev.target.textContent = open
+      ? 'Show fewer'
+      : 'Show all ' + ev.target.getAttribute('data-total') + ' checks';
+    return;
+  }
+  var th = ev.target.closest ? ev.target.closest('[data-sort]') : null;
+  if(th){
+    var k = th.getAttribute('data-sort');
+    if(sort.key === k) sort.dir = -sort.dir; else { sort.key = k; sort.dir = 1; }
+    renderTable();
+  }
+});
+
+['mouseenter','focusin'].forEach(function(evt){
+  document.getElementById('gap-grid').addEventListener(evt, function(ev){
+    var card = ev.target.closest ? ev.target.closest('.gap-card') : null;
+    if(!card) return;
+    document.querySelectorAll('.gap-card').forEach(function(c){ c.classList.toggle('active', c === card); });
+    highlight((card.getAttribute('data-els') || '').split(/\s+/));
+  }, true);
+});
+['mouseleave','focusout'].forEach(function(evt){
+  document.getElementById('gap-grid').addEventListener(evt, function(ev){
+    var card = ev.target.closest ? ev.target.closest('.gap-card') : null;
+    if(!card) return;
+    if(evt === 'focusout' && card.contains(ev.relatedTarget)) return;
+    card.classList.remove('active');
+    highlight([]);
+  }, true);
+});
+
+var btnPreview = document.getElementById('btn-preview');
+btnPreview.addEventListener('click', function(){
+  var on = document.body.classList.toggle('print-preview');
+  btnPreview.setAttribute('aria-pressed', on ? 'true' : 'false');
+  btnPreview.textContent = on ? 'Exit print view' : 'Print view';
+  if(on) window.scrollTo(0, 0);
+});
+document.getElementById('btn-print').addEventListener('click', function(){ window.print(); });
+document.addEventListener('keydown', function(ev){
+  if(ev.key === 'Escape'){
+    if(document.body.classList.contains('print-preview')) btnPreview.click();
+    else if(selected) setSelected(selected);
+  }
+});
+
+/* ============================= go ============================== */
+renderHeader();
+renderChecks(validate(DATA));
+renderPyramids();
+renderAllDetails();
+renderGaps();
+renderMethod();
+renderTrack();
+renderTable();
+})();
+</script>
+</body>
+</html>
